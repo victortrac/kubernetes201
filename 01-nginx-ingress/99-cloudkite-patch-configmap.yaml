@@ -1,0 +1,11 @@
+[
+  {
+    'op': 'add',
+    'path': '/data',
+    'value': {
+      'enable-vts-status': "true",
+      'proxy-read-timeout': "120",
+      'proxy-body-size': '20m'
+    }
+  }
+]

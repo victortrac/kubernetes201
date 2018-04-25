@@ -1,0 +1,17 @@
+[
+  {
+    'op': 'replace',
+    'path':'/spec/updateStrategy/type',
+    'value': 'RollingUpdate'
+  },
+  {
+    'op': 'replace',
+    'path':'/spec/updateStrategy/rollingUpdate/maxUnavailable',
+    'value': 1
+  },
+  {
+    'op': 'add',
+    'path':'/spec/minReadySeconds',
+    'value': 10
+  }
+]
