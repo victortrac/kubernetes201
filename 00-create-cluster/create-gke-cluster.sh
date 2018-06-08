@@ -2,9 +2,9 @@
 
 gcloud beta container --project "kubernetes201" clusters create "cluster-1" \
   --addons HorizontalPodAutoscaling,KubernetesDashboard \
-  --cluster-version "1.9.7-gke.0" \
+  --cluster-version "1.10.2-gke.3" \
   --disk-size "100" \
-  --enable-autorepair
+  --enable-autorepair \
   --enable-autoscaling \
   --enable-cloud-logging \
   --enable-cloud-monitoring \
