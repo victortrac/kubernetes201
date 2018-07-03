@@ -13,8 +13,7 @@ function download() {
   curl -s https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/tcp-services-configmap.yaml -o 06-tcp-services-configmap.yaml
   curl -s https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/udp-services-configmap.yaml -o 07-udp-services-configmap.yaml
   curl -s https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/rbac.yaml -o 10-rbac.yaml
-  curl -s https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/provider/gce-gke/service.yaml -o 20-gke-service.yaml
-  curl -s https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/provider/patch-service-with-rbac.yaml -o 11-daemonset.yaml
+  curl -s https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/with-rbac.yaml -o 11-daemonset.yaml
   sed -i \
       -e 's!apiVersion: extensions/v1beta1!apiVersion: apps/v1beta2!' \
       -e 's!kind: Deployment!kind: DaemonSet!' \
@@ -29,11 +28,12 @@ function install_base() {
   done
 }
 
-function install_gke() {
+function install() {
   local ENV=$1
 
   ## sets up nginx for use in GCP/GKE
-  pause kubectl apply -f 20-gke-service.yaml
+  curl -s https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/provider/cloud-generic.yaml -o 20-service.yaml
+  pause kubectl apply -f 20-service.yaml
 
   # adds DaemonSet Rolling Update configuration
   local daemonset_patch=$(cat 99-cloudkite-patch-daemonset.yaml)
@@ -75,13 +75,13 @@ function main() {
     download)
       download
       ;;
-    install_gke)
+    install)
       patch_gcp_rbac
       install_base
-      install_gke "${ENV}"
+      install "${ENV}"
       ;;
     *)
-      echo $"Usage: $0 {download|install_gke}"
+      echo $"Usage: $0 {download|install}"
       exit 1
   esac
 }
